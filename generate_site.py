@@ -1,9 +1,9 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成 (v2 改善版)
+GitHub Actions用: スクレイピング → 静的HTML生成 (v3)
+- 日本時間(JST)表示対応
 - 経産省: 英語版プレスリリース + GENIACページ
 - 総務省: Shift-JISエンコーディング対応
 - 自民党: ニュースページ追加
-- 文科省: 正常動作確認済み
 """
 
 import asyncio
@@ -11,7 +11,7 @@ import json
 import os
 import re
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import urljoin
@@ -22,6 +22,14 @@ from jinja2 import Template
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger(__name__)
+
+# 日本時間
+JST = timezone(timedelta(hours=9))
+
+
+def now_jst() -> datetime:
+    return datetime.now(JST)
+
 
 # ===== 設定 =====
 
@@ -169,12 +177,10 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
 
         matched = match_keywords(title)
 
-        # GENIACページは全リンクを関連とみなす
         if source_id == "meti_geniac" and not matched:
             if len(title) > 10:
                 matched = ["GENIAC"]
 
-        # 自民党ページ
         if source_id == "jimin_news" and not matched:
             party_keywords = ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信", "IT"]
             if any(kw in title for kw in party_keywords):
@@ -189,7 +195,7 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
             source_id=source_id,
             source_name=config["name"],
             matched_keywords=matched,
-            scraped_at=datetime.now().strftime("%Y/%m/%d %H:%M"),
+            scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
         ))
 
     logger.info(f"[{source_id}] {len(items)}件取得")
@@ -251,7 +257,7 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
             source_id="egov_pubcom",
             source_name="e-Gov パブコメ",
             matched_keywords=matched,
-            scraped_at=datetime.now().strftime("%Y/%m/%d %H:%M"),
+            scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
             is_public_comment=True,
             end_date=end_date,
             ministry=ministry,
@@ -291,7 +297,7 @@ async def scrape_soumu_ai() -> list[ScrapedItem]:
                 source_id="soumu_news",
                 source_name="総務省",
                 matched_keywords=matched,
-                scraped_at=datetime.now().strftime("%Y/%m/%d %H:%M"),
+                scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
             ))
     logger.info(f"[soumu_ai追加] {len(items)}件取得")
     return items
@@ -437,6 +443,21 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             padding: 2px 8px; border-radius: 10px; font-size: 0.75em; font-weight: bold;
         }
         .empty { text-align: center; padding: 30px; color: #999; }
+        .refresh-link {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.85em;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.4);
+        }
+        .refresh-link:hover { transform: scale(1.05); }
     </style>
 </head>
 <body>
@@ -462,7 +483,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <button class="tab" onclick="filter('jimin')">自民党</button>
     </div>
 
-    <div class="update-time">最終更新: {{ update_time }}</div>
+    <div class="update-time">最終更新: {{ update_time }} (JST)</div>
 
     {% if deadlines %}
     <div class="section">
@@ -500,6 +521,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 </div>
 
+<a class="refresh-link" href="{{ actions_url }}" target="_blank">🔄 手動更新</a>
+
 <script>
 function filter(type) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -519,7 +542,7 @@ function filter(type) {
 
 
 def generate_html(data: list[dict]):
-    now = datetime.now()
+    now = now_jst()
     today_str = now.strftime("%Y/%m/%d %H:%M")
 
     deadlines = []
@@ -530,11 +553,15 @@ def generate_html(data: list[dict]):
             if item.get("end_date"):
                 try:
                     parts = item["end_date"].split("/")
-                    end_dt = datetime(int(parts[0]), int(parts[1]), int(parts[2]))
+                    end_dt = datetime(int(parts[0]), int(parts[1]), int(parts[2]), tzinfo=JST)
                     if now < end_dt <= now + timedelta(days=7):
                         deadlines.append(item)
                 except (ValueError, IndexError):
                     pass
+
+    # GitHub Actionsの手動実行ページURL
+    repo_name = os.environ.get("GITHUB_REPOSITORY", "fumsuzu/ai-policy-monitor")
+    actions_url = f"https://github.com/{repo_name}/actions/workflows/scrape.yml"
 
     template = Template(HTML_TEMPLATE)
     html = template.render(
@@ -544,6 +571,7 @@ def generate_html(data: list[dict]):
         update_time=today_str,
         deadlines=deadlines,
         articles=data[:100],
+        actions_url=actions_url,
     )
 
     output_path = os.path.join(OUTPUT_DIR, "index.html")
@@ -555,7 +583,7 @@ def generate_html(data: list[dict]):
 # ===== メイン =====
 
 async def main():
-    logger.info("=== AI政策モニター v2: スクレイピング開始 ===")
+    logger.info("=== AI政策モニター v3: スクレイピング開始 ===")
 
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件 新規取得")

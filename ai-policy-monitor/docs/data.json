@@ -1,0 +1,86 @@
+[
+  {
+    "title": "人工知能関連技術の研究開発及び活用の推進に関する法律（AI法）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "人工知能関連技術の研究開発及び活用の推進"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略会議（イノベーション政策強化推進のための有識者会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_senryaku/ai_senryaku.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略推進関係省庁会議",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_kankeishoutyou/ai_kankeishoutyou.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI学習データに関するコミュニケーション窓口",
+    "url": "https://www8.cao.go.jp/cstp/ai/aidata/communicationdesk.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "学習データ"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略チーム（関係省庁連携）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_team/ai_team.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "イノベーション政策強化推進のための有識者会議「AI戦略」（AI戦略実行会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/senryaku/kaigi.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/17 15:57",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  }
+]

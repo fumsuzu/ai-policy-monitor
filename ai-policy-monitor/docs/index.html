@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI政策モニター</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 1000px; margin: 0 auto; padding: 20px; }
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        header h1 { font-size: 1.6em; margin-bottom: 5px; }
+        header p { opacity: 0.85; font-size: 0.9em; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            text-align: center;
+        }
+        .stat-card .number { font-size: 1.8em; font-weight: bold; color: #1a237e; }
+        .stat-card .label { color: #666; font-size: 0.85em; }
+        .tabs {
+            display: flex; gap: 5px; margin-bottom: 20px; flex-wrap: wrap;
+        }
+        .tab {
+            padding: 8px 16px; border: none; background: white;
+            border-radius: 8px; cursor: pointer; font-size: 0.85em;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+        }
+        .tab:hover { background: #e8eaf6; }
+        .tab.active { background: #1a237e; color: white; }
+        .update-time { text-align: right; font-size: 0.8em; color: #999; margin-bottom: 10px; }
+        .section { margin-bottom: 25px; }
+        .section h2 { font-size: 1.2em; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 2px solid #e8eaf6; }
+        .card {
+            background: white; padding: 15px; border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05); border-left: 4px solid #1a237e;
+            margin-bottom: 10px; transition: transform 0.15s;
+        }
+        .card:hover { transform: translateX(4px); }
+        .card.pubcom { border-left-color: #2e7d32; }
+        .card.deadline { border-left-color: #d32f2f; }
+        .card .source {
+            font-size: 0.75em; color: #666; background: #f0f0f0;
+            padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;
+        }
+        .card .title { font-weight: 600; margin-bottom: 4px; }
+        .card .title a { color: #1a237e; text-decoration: none; }
+        .card .title a:hover { text-decoration: underline; }
+        .card .meta { font-size: 0.8em; color: #888; display: flex; gap: 10px; flex-wrap: wrap; }
+        .kw-tag {
+            display: inline-block; background: #e8eaf6; color: #1a237e;
+            padding: 1px 7px; border-radius: 10px; font-size: 0.7em; margin-right: 3px;
+        }
+        .deadline-badge {
+            background: #ffebee; color: #c62828;
+            padding: 2px 8px; border-radius: 10px; font-size: 0.75em; font-weight: bold;
+        }
+        .empty { text-align: center; padding: 30px; color: #999; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>🏛️ AI政策モニター</h1>
+        <p>AI推進法 / 透明性・知的財産行動規範 / プリンシプルコード / GENIAC / フロンティアAI</p>
+    </header>
+
+    <div class="stats">
+        <div class="stat-card"><div class="number">6</div><div class="label">収集済み</div></div>
+        <div class="stat-card"><div class="number">0</div><div class="label">パブコメ</div></div>
+        <div class="stat-card"><div class="number">0</div><div class="label">締切間近</div></div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="filter('all')">すべて</button>
+        <button class="tab" onclick="filter('pubcom')">パブコメ</button>
+        <button class="tab" onclick="filter('cabinet_office')">内閣府</button>
+        <button class="tab" onclick="filter('meti')">経産省</button>
+        <button class="tab" onclick="filter('soumu_news')">総務省</button>
+        <button class="tab" onclick="filter('mext_news')">文科省</button>
+        <button class="tab" onclick="filter('jimin_activity')">自民党</button>
+    </div>
+
+    <div class="update-time">最終更新: 2026/06/17 15:57</div>
+
+    
+
+    <div class="section">
+        <h2>📰 最新情報</h2>
+        <div id="articles">
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html" target="_blank">人工知能関連技術の研究開発及び活用の推進に関する法律（AI法）</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">人工知能関連技術の研究開発及び活用の推進</span>
+            </div>
+        </div>
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_senryaku/ai_senryaku.html" target="_blank">AI戦略会議（イノベーション政策強化推進のための有識者会議）</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">AI戦略</span>
+            </div>
+        </div>
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_kankeishoutyou/ai_kankeishoutyou.html" target="_blank">AI戦略推進関係省庁会議</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">AI戦略</span>
+            </div>
+        </div>
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/aidata/communicationdesk.html" target="_blank">AI学習データに関するコミュニケーション窓口</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">学習データ</span>
+            </div>
+        </div>
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_team/ai_team.html" target="_blank">AI戦略チーム（関係省庁連携）</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">AI戦略</span>
+            </div>
+        </div>
+        
+        <div class="card " data-source="cabinet_office">
+            <span class="source">内閣府</span>
+            <div class="title"><a href="https://www8.cao.go.jp/cstp/ai/senryaku/kaigi.html" target="_blank">イノベーション政策強化推進のための有識者会議「AI戦略」（AI戦略実行会議）</a></div>
+            <div class="meta">
+                <span>2026/06/17 15:57</span>
+                <span class="kw-tag">AI戦略</span>
+            </div>
+        </div>
+        
+        
+        </div>
+    </div>
+</div>
+
+<script>
+function filter(type) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    event.target.classList.add('active');
+    document.querySelectorAll('#articles .card').forEach(card => {
+        const src = card.dataset.source;
+        if (type === 'all') card.style.display = '';
+        else if (type === 'pubcom') card.style.display = card.classList.contains('pubcom') ? '' : 'none';
+        else if (type === 'meti') card.style.display = (src === 'meti_press' || src === 'meti_geniac') ? '' : 'none';
+        else card.style.display = src === type ? '' : 'none';
+    });
+}
+</script>
+</body>
+</html>

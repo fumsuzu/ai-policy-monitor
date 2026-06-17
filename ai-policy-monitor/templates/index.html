@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI政策モニター</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Hiragino Sans', 'Noto Sans JP', sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.3);
+        }
+        header h1 { font-size: 1.8em; margin-bottom: 5px; }
+        header p { opacity: 0.85; font-size: 0.95em; }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .stat-card .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1a237e;
+        }
+        .stat-card .label { color: #666; font-size: 0.9em; margin-top: 5px; }
+        .tabs {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            border: none;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tab:hover { background: #e8eaf6; }
+        .tab.active { background: #1a237e; color: white; }
+        .section { margin-bottom: 30px; }
+        .section h2 {
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e8eaf6;
+        }
+        .article-list { display: flex; flex-direction: column; gap: 12px; }
+        .article-card {
+            background: white;
+            padding: 18px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border-left: 4px solid #1a237e;
+            transition: transform 0.2s;
+        }
+        .article-card:hover { transform: translateX(5px); }
+        .article-card.new { border-left-color: #ff6f00; }
+        .article-card.public-comment { border-left-color: #2e7d32; }
+        .article-card.deadline-soon { border-left-color: #d32f2f; }
+        .article-card .source {
+            font-size: 0.8em;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        .article-card .title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .article-card .title a {
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .article-card .title a:hover { text-decoration: underline; }
+        .article-card .meta {
+            font-size: 0.85em;
+            color: #888;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .keyword-tag {
+            display: inline-block;
+            background: #e8eaf6;
+            color: #1a237e;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            margin-right: 4px;
+        }
+        .deadline-badge {
+            background: #ffebee;
+            color: #c62828;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        .refresh-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 0.9em;
+            box-shadow: 0 4px 15px rgba(26, 35, 126, 0.4);
+            transition: transform 0.2s;
+        }
+        .refresh-btn:hover { transform: scale(1.05); }
+        .last-update {
+            text-align: right;
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏛️ AI政策モニター</h1>
+            <p>AI推進法 / 透明性・知的財産行動規範 / プリンシプルコード / GENIAC / フロンティアAI</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="number" id="total-articles">{{ stats.total_articles }}</div>
+                <div class="label">収集済み記事</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="new-articles">{{ stats.new_articles }}</div>
+                <div class="label">未読記事</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="open-pubcoms">{{ stats.open_pubcoms }}</div>
+                <div class="label">募集中パブコメ</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="deadline-soon">{{ stats.deadline_soon }}</div>
+                <div class="label">締切間近</div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('all')">すべて</button>
+            <button class="tab" onclick="showTab('pubcom')">パブコメ</button>
+            <button class="tab" onclick="showTab('cabinet')">内閣府</button>
+            <button class="tab" onclick="showTab('meti')">経産省</button>
+            <button class="tab" onclick="showTab('soumu')">総務省</button>
+            <button class="tab" onclick="showTab('mext')">文科省</button>
+            <button class="tab" onclick="showTab('jimin')">自民党</button>
+        </div>
+
+        <div class="last-update">
+            最終更新: {{ last_update or '未実行' }}
+        </div>
+
+        <!-- パブコメ締切間近 -->
+        {% if deadline_comments %}
+        <div class="section" id="section-deadline">
+            <h2>⏰ パブコメ締切間近</h2>
+            <div class="article-list">
+                {% for c in deadline_comments %}
+                <div class="article-card deadline-soon">
+                    <span class="source">{{ c.ministry or 'パブリックコメント' }}</span>
+                    <div class="title"><a href="{{ c.url }}" target="_blank">{{ c.title }}</a></div>
+                    <div class="meta">
+                        <span class="deadline-badge">
+                            締切: {{ c.end_date.strftime('%Y/%m/%d') if c.end_date else '不明' }}
+                        </span>
+                        {% if c.matched_keywords %}
+                        <span>
+                            {% for kw in c.matched_keywords.split(',') %}
+                            <span class="keyword-tag">{{ kw }}</span>
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- 新着情報 -->
+        <div class="section" id="section-articles">
+            <h2>📰 最新情報</h2>
+            <div class="article-list">
+                {% if articles %}
+                {% for a in articles %}
+                <div class="article-card {{ 'new' if a.is_new else '' }} {{ 'public-comment' if a.article_type == 'public_comment' else '' }}"
+                     data-source="{{ a.source_id }}">
+                    <span class="source">{{ a.source_name }}</span>
+                    {% if a.is_new %}<span class="source" style="background:#fff3e0;color:#e65100;">NEW</span>{% endif %}
+                    <div class="title"><a href="{{ a.url }}" target="_blank">{{ a.title }}</a></div>
+                    <div class="meta">
+                        <span>{{ a.scraped_at.strftime('%Y/%m/%d %H:%M') }}</span>
+                        {% if a.matched_keywords %}
+                        <span>
+                            {% for kw in a.matched_keywords.split(',') %}
+                            <span class="keyword-tag">{{ kw }}</span>
+                            {% endfor %}
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div class="empty-state">
+                    <p>まだ記事が収集されていません。</p>
+                    <p>「今すぐ更新」ボタンで初回スクレイピングを実行してください。</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <button class="refresh-btn" onclick="triggerScrape()">🔄 今すぐ更新</button>
+    </div>
+
+    <script>
+        function showTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const cards = document.querySelectorAll('.article-card');
+            cards.forEach(card => {
+                if (tab === 'all') {
+                    card.style.display = '';
+                } else if (tab === 'pubcom') {
+                    card.style.display = card.classList.contains('public-comment') ? '' : 'none';
+                } else if (tab === 'cabinet') {
+                    card.style.display = card.dataset.source === 'cabinet_office' ? '' : 'none';
+                } else if (tab === 'meti') {
+                    card.style.display = (card.dataset.source === 'meti_press' || card.dataset.source === 'meti_geniac') ? '' : 'none';
+                } else if (tab === 'soumu') {
+                    card.style.display = card.dataset.source === 'soumu_news' ? '' : 'none';
+                } else if (tab === 'mext') {
+                    card.style.display = card.dataset.source === 'mext_news' ? '' : 'none';
+                } else if (tab === 'jimin') {
+                    card.style.display = card.dataset.source === 'jimin_activity' ? '' : 'none';
+                }
+            });
+        }
+
+        async function triggerScrape() {
+            const btn = document.querySelector('.refresh-btn');
+            btn.textContent = '⏳ 更新中...';
+            btn.disabled = true;
+            try {
+                const resp = await fetch('/api/scrape', { method: 'POST' });
+                const data = await resp.json();
+                if (data.status === 'ok') {
+                    window.location.reload();
+                } else {
+                    alert('エラー: ' + (data.message || '不明'));
+                }
+            } catch (e) {
+                alert('通信エラー: ' + e.message);
+            } finally {
+                btn.textContent = '🔄 今すぐ更新';
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>

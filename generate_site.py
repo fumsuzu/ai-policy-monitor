@@ -1,6 +1,9 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成
-ローカルのFastAPIアプリとは別に、GitHub Pages用の静的サイトを生成する。
+GitHub Actions用: スクレイピング → 静的HTML生成 (v2 改善版)
+- 経産省: 英語版プレスリリース + GENIACページ
+- 総務省: Shift-JISエンコーディング対応
+- 自民党: ニュースページ追加
+- 文科省: 正常動作確認済み
 """
 
 import asyncio
@@ -12,7 +15,6 @@ from datetime import datetime, timedelta
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import urljoin
-from pathlib import Path
 
 import httpx
 from bs4 import BeautifulSoup
@@ -27,47 +29,62 @@ KEYWORDS = [
     "AI推進法",
     "人工知能関連技術の研究開発及び活用の推進",
     "生成AI",
+    "generative AI",
     "透明性",
     "知的財産",
     "行動規範",
     "プリンシプル",
     "GENIAC",
     "フロンティアAI",
+    "frontier AI",
     "基盤モデル",
+    "foundation model",
     "AI戦略",
     "AI安全",
+    "AI safety",
     "著作権",
     "学習データ",
+    "AI法",
+    "AI Act",
+    "デジタル社会推進",
+    "AI・web3",
 ]
 
 SOURCES = {
     "cabinet_office": {
         "name": "内閣府",
         "url": "https://www8.cao.go.jp/cstp/ai/index.html",
+        "encoding": "utf-8",
     },
-    "meti_press": {
-        "name": "経産省",
-        "url": "https://www.meti.go.jp/press/",
+    "meti_en_press": {
+        "name": "経産省(EN)",
+        "url": "https://www.meti.go.jp/english/press/category_03.html",
+        "encoding": "utf-8",
     },
     "meti_geniac": {
         "name": "経産省 GENIAC",
-        "url": "https://www.meti.go.jp/policy/mono_info_service/geniac/",
+        "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/",
+        "encoding": "utf-8",
     },
     "soumu_news": {
         "name": "総務省",
         "url": "https://www.soumu.go.jp/menu_news/s-news/",
+        "encoding": "shift_jis",
     },
     "mext_news": {
         "name": "文科省",
         "url": "https://www.mext.go.jp/b_menu/houdou/index.htm",
+        "encoding": "utf-8",
     },
-    "jimin_activity": {
+    "jimin_news": {
         "name": "自民党",
-        "url": "https://www.jimin.jp/activity/",
+        "url": "https://www.jimin.jp/news/?category=policy",
+        "encoding": "utf-8",
     },
     "egov_pubcom": {
         "name": "e-Gov パブコメ",
         "url": "https://public-comment.e-gov.go.jp/",
+        "encoding": "utf-8",
     },
 }
 
@@ -112,24 +129,29 @@ def match_keywords(text: str) -> list[str]:
     return matched
 
 
-async def fetch_page(url: str) -> Optional[BeautifulSoup]:
+async def fetch_page(url: str, encoding: str = "utf-8") -> Optional[BeautifulSoup]:
     try:
         async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
             resp = await client.get(url, headers=HEADERS)
             resp.raise_for_status()
-            if "charset" not in resp.headers.get("content-type", ""):
-                resp.encoding = "utf-8"
-            return BeautifulSoup(resp.text, "lxml")
+            if encoding != "utf-8":
+                content = resp.content.decode(encoding, errors="replace")
+            else:
+                content_type = resp.headers.get("content-type", "")
+                if "charset" not in content_type:
+                    resp.encoding = "utf-8"
+                content = resp.text
+            return BeautifulSoup(content, "lxml")
     except Exception as e:
         logger.error(f"取得失敗 {url}: {e}")
         return None
 
 
-async def scrape_generic(source_id: str) -> list[ScrapedItem]:
-    """汎用スクレイパー: ページ内のリンクからキーワードマッチするものを収集"""
+async def scrape_source(source_id: str) -> list[ScrapedItem]:
+    """汎用スクレイパー"""
     config = SOURCES[source_id]
     items = []
-    soup = await fetch_page(config["url"])
+    soup = await fetch_page(config["url"], config.get("encoding", "utf-8"))
     if not soup:
         return items
 
@@ -149,11 +171,12 @@ async def scrape_generic(source_id: str) -> list[ScrapedItem]:
 
         # GENIACページは全リンクを関連とみなす
         if source_id == "meti_geniac" and not matched:
-            matched = ["GENIAC"]
+            if len(title) > 10:
+                matched = ["GENIAC"]
 
-        # 自民党ページはデジタル/AI関連も広くマッチ
-        if source_id == "jimin_activity" and not matched:
-            party_keywords = ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信"]
+        # 自民党ページ
+        if source_id == "jimin_news" and not matched:
+            party_keywords = ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信", "IT"]
             if any(kw in title for kw in party_keywords):
                 matched = ["AI戦略"]
 
@@ -175,13 +198,10 @@ async def scrape_generic(source_id: str) -> list[ScrapedItem]:
 
 async def scrape_egov_pubcom() -> list[ScrapedItem]:
     """e-Govパブコメ用スクレイパー"""
-    config = SOURCES["egov_pubcom"]
     items = []
-
-    # 複数URLを試行
     urls = [
         "https://public-comment.e-gov.go.jp/servlet/Public?CLASSNAME=PCM1031_CLS&fromType=list",
-        config["url"],
+        "https://public-comment.e-gov.go.jp/",
     ]
 
     soup = None
@@ -190,6 +210,7 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
         if soup:
             break
     if not soup:
+        logger.info("[egov_pubcom] 0件取得")
         return items
 
     seen_urls = set()
@@ -208,7 +229,6 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
         if not matched:
             continue
 
-        # 日付抽出
         parent = link.find_parent("tr") or link.find_parent("div")
         end_date = None
         ministry = None
@@ -241,17 +261,54 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
     return items
 
 
+async def scrape_soumu_ai() -> list[ScrapedItem]:
+    """総務省AI関連を追加で検索"""
+    items = []
+    ai_urls = [
+        "https://www.soumu.go.jp/menu_seisaku/ictseisaku/",
+        "https://www.soumu.go.jp/main_sosiki/kenkyu/ai_network/",
+    ]
+    for url in ai_urls:
+        soup = await fetch_page(url, "shift_jis")
+        if not soup:
+            continue
+        seen = set()
+        for link in soup.find_all("a"):
+            title = link.get_text(strip=True)
+            href = link.get("href", "")
+            if not title or not href or len(title) < 5:
+                continue
+            full_url = urljoin(url, href)
+            if full_url in seen:
+                continue
+            seen.add(full_url)
+            matched = match_keywords(title)
+            if not matched:
+                continue
+            items.append(ScrapedItem(
+                title=title,
+                url=full_url,
+                source_id="soumu_news",
+                source_name="総務省",
+                matched_keywords=matched,
+                scraped_at=datetime.now().strftime("%Y/%m/%d %H:%M"),
+            ))
+    logger.info(f"[soumu_ai追加] {len(items)}件取得")
+    return items
+
+
 async def run_all_scrapers() -> list[ScrapedItem]:
     """全スクレイパー実行"""
     all_items = []
 
-    # 各ソースを並行でスクレイピング
     tasks = []
     for source_id in SOURCES:
         if source_id == "egov_pubcom":
             tasks.append(scrape_egov_pubcom())
         else:
-            tasks.append(scrape_generic(source_id))
+            tasks.append(scrape_source(source_id))
+
+    tasks.append(scrape_soumu_ai())
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
     for result in results:
@@ -266,7 +323,6 @@ async def run_all_scrapers() -> list[ScrapedItem]:
 # ===== データ管理 =====
 
 def load_existing_data() -> list[dict]:
-    """既存データを読み込み"""
     if os.path.exists(DATA_FILE):
         with open(DATA_FILE, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -274,7 +330,6 @@ def load_existing_data() -> list[dict]:
 
 
 def merge_data(existing: list[dict], new_items: list[ScrapedItem]) -> list[dict]:
-    """既存データと新規データをマージ（URL重複除去）"""
     existing_urls = {item["url"] for item in existing}
 
     for item in new_items:
@@ -293,15 +348,11 @@ def merge_data(existing: list[dict], new_items: list[ScrapedItem]) -> list[dict]
             })
             existing_urls.add(item.url)
 
-    # 新しい順にソート
     existing.sort(key=lambda x: x.get("scraped_at", ""), reverse=True)
-
-    # 最大500件に制限
     return existing[:500]
 
 
 def save_data(data: list[dict]):
-    """データ保存"""
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -408,7 +459,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <button class="tab" onclick="filter('meti')">経産省</button>
         <button class="tab" onclick="filter('soumu_news')">総務省</button>
         <button class="tab" onclick="filter('mext_news')">文科省</button>
-        <button class="tab" onclick="filter('jimin_activity')">自民党</button>
+        <button class="tab" onclick="filter('jimin')">自民党</button>
     </div>
 
     <div class="update-time">最終更新: {{ update_time }}</div>
@@ -457,7 +508,8 @@ function filter(type) {
         const src = card.dataset.source;
         if (type === 'all') card.style.display = '';
         else if (type === 'pubcom') card.style.display = card.classList.contains('pubcom') ? '' : 'none';
-        else if (type === 'meti') card.style.display = (src === 'meti_press' || src === 'meti_geniac') ? '' : 'none';
+        else if (type === 'meti') card.style.display = (src === 'meti_en_press' || src === 'meti_geniac') ? '' : 'none';
+        else if (type === 'jimin') card.style.display = src === 'jimin_news' ? '' : 'none';
         else card.style.display = src === type ? '' : 'none';
     });
 }
@@ -467,11 +519,9 @@ function filter(type) {
 
 
 def generate_html(data: list[dict]):
-    """静的HTMLを生成"""
     now = datetime.now()
     today_str = now.strftime("%Y/%m/%d %H:%M")
 
-    # 締切間近のパブコメ（7日以内）
     deadlines = []
     pubcom_count = 0
     for item in data:
@@ -493,7 +543,7 @@ def generate_html(data: list[dict]):
         deadline_count=len(deadlines),
         update_time=today_str,
         deadlines=deadlines,
-        articles=data[:100],  # 最新100件を表示
+        articles=data[:100],
     )
 
     output_path = os.path.join(OUTPUT_DIR, "index.html")
@@ -505,21 +555,17 @@ def generate_html(data: list[dict]):
 # ===== メイン =====
 
 async def main():
-    logger.info("=== AI政策モニター: スクレイピング開始 ===")
+    logger.info("=== AI政策モニター v2: スクレイピング開始 ===")
 
-    # スクレイピング実行
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件 新規取得")
 
-    # 既存データとマージ
     existing = load_existing_data()
     merged = merge_data(existing, new_items)
     save_data(merged)
     logger.info(f"データ保存完了 (合計{len(merged)}件)")
 
-    # HTML生成
     generate_html(merged)
-
     logger.info("=== 完了 ===")
 
 

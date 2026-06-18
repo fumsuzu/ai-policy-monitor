@@ -24,6 +24,9 @@ jobs:
       - name: Install dependencies
         run: pip install httpx beautifulsoup4 lxml jinja2
 
+      - name: Create docs directory
+        run: mkdir -p docs
+
       - name: Run scraper
         run: python generate_site.py
 

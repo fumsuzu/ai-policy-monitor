@@ -1,5 +1,6 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成 (v6)
+GitHub Actions用: スクレイピング → 静的HTML生成 (v7)
+- デジタル庁: RSSフィード対応（確実に取得可能）
 """
 
 import asyncio
@@ -11,6 +12,7 @@ from datetime import datetime, timedelta, timezone
 from dataclasses import dataclass, field
 from typing import Optional
 from urllib.parse import urljoin
+import xml.etree.ElementTree as ET
 
 import httpx
 from bs4 import BeautifulSoup
@@ -39,10 +41,6 @@ KEYWORDS = [
 
 SOURCES = {
     "cabinet_office": {"name": "内閣府", "url": "https://www8.cao.go.jp/cstp/ai/index.html", "encoding": "utf-8"},
-    "digital_agency": {"name": "デジタル庁", "url": "https://www.digital.go.jp/news", "encoding": "utf-8"},
-    "digital_ai": {"name": "デジタル庁(AI)", "url": "https://www.digital.go.jp/policies/genai", "encoding": "utf-8"},
-"digital_ai_board": {"name": "デジタル庁(AI会議)", "url": "https://www.digital.go.jp/councils/ai-advisory-board", "encoding": "utf-8"},
-
     "meti_en_press": {"name": "経産省(EN)", "url": "https://www.meti.go.jp/english/press/category_03.html", "encoding": "utf-8"},
     "meti_geniac": {"name": "経産省 GENIAC", "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/", "encoding": "utf-8"},
     "soumu_news": {"name": "総務省", "url": "https://www.soumu.go.jp/menu_news/s-news/", "encoding": "shift_jis"},
@@ -140,6 +138,63 @@ async def fetch_page(url, encoding="utf-8"):
         return None
 
 
+async def fetch_raw(url):
+    try:
+        async with httpx.AsyncClient(timeout=60.0, follow_redirects=True) as client:
+            resp = await client.get(url, headers=HEADERS)
+            resp.raise_for_status()
+            return resp.text
+    except Exception as e:
+        logger.error(f"取得失敗 {url}: {e}")
+        return None
+
+
+async def scrape_digital_rss() -> list[ScrapedItem]:
+    """デジタル庁: RSSフィードから取得"""
+    items = []
+    rss_text = await fetch_raw("https://www.digital.go.jp/rss/news.xml")
+    if not rss_text:
+        logger.info("[digital_agency] RSS取得失敗")
+        return items
+
+    try:
+        root = ET.fromstring(rss_text)
+        for item_el in root.findall(".//item"):
+            title = item_el.findtext("title", "").strip()
+            link = item_el.findtext("link", "").strip()
+            pub_date_raw = item_el.findtext("pubDate", "")
+
+            if not title or not link:
+                continue
+
+            matched = match_keywords(title)
+            if not matched:
+                if any(kw in title for kw in ["AI", "人工知能", "デジタル", "データ", "ガイドライン", "生成"]):
+                    matched = ["AI戦略"]
+            if not matched:
+                continue
+
+            # pubDateをパース (例: "Wed, 17 Jun 2026 15:03:17 +0900")
+            pub_date = ""
+            if pub_date_raw:
+                dm = re.search(r"(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})", pub_date_raw)
+                if dm:
+                    month = MONTH_EN.get(dm.group(2).lower())
+                    if month:
+                        pub_date = f"{dm.group(3)}/{month:02d}/{int(dm.group(1)):02d}"
+
+            items.append(ScrapedItem(
+                title=title, url=link, source_id="digital_agency", source_name="デジタル庁",
+                matched_keywords=matched, scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
+                published_date=pub_date,
+            ))
+    except ET.ParseError as e:
+        logger.error(f"[digital_agency] RSS解析エラー: {e}")
+
+    logger.info(f"[digital_agency] {len(items)}件取得 (RSS)")
+    return items
+
+
 async def scrape_source(source_id):
     config = SOURCES[source_id]
     items = []
@@ -163,9 +218,6 @@ async def scrape_source(source_id):
             matched = ["GENIAC"]
         if source_id == "jimin_news" and not matched:
             if any(kw in title for kw in ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信"]):
-                matched = ["AI戦略"]
-        if source_id in ("digital_agency", "digital_ai") and not matched:
-            if any(kw in title for kw in ["AI", "人工知能", "生成", "データ", "クラウド", "ガイドライン"]):
                 matched = ["AI戦略"]
         if not matched:
             continue
@@ -266,6 +318,7 @@ async def run_all_scrapers():
         else:
             tasks.append(scrape_source(source_id))
     tasks.append(scrape_soumu_ai())
+    tasks.append(scrape_digital_rss())
 
     all_items = []
     for result in await asyncio.gather(*tasks, return_exceptions=True):
@@ -355,7 +408,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 <button class="tab active" onclick="filter('all')">すべて</button>
 <button class="tab" onclick="filter('pubcom')">パブコメ</button>
 <button class="tab" onclick="filter('cabinet_office')">内閣府</button>
-<button class="tab" onclick="filter('digital')">デジタル庁</button>
+<button class="tab" onclick="filter('digital_agency')">デジタル庁</button>
 <button class="tab" onclick="filter('meti')">経産省</button>
 <button class="tab" onclick="filter('soumu_news')">総務省</button>
 <button class="tab" onclick="filter('mext_news')">文科省</button>
@@ -373,7 +426,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 {% endif %}
 <div class="section"><h2>📰 最新情報</h2><div id="articles">
 {% for item in articles %}
-<div class="card {{ 'pubcom' if item.is_public_comment else '' }} {{ 'digital' if item.source_id in ('digital_agency','digital_ai') else '' }}" data-source="{{ item.source_id }}">
+<div class="card {{ 'pubcom' if item.is_public_comment else '' }} {{ 'digital' if item.source_id == 'digital_agency' else '' }}" data-source="{{ item.source_id }}">
 <span class="source">{{ item.source_name }}</span>
 <div class="title"><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
 <div class="meta">{% if item.published_date %}<span class="pub-date">📅 {{ item.published_date }}</span>{% else %}<span>{{ item.scraped_at }}</span>{% endif %}{% for kw in item.matched_keywords %}<span class="kw-tag">{{ kw }}</span>{% endfor %}</div></div>
@@ -382,7 +435,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 </div></div></div>
 <a class="refresh-link" href="{{ actions_url }}" target="_blank">🔄 手動更新</a>
 <script>
-function filter(type){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('#articles .card').forEach(card=>{const src=card.dataset.source;if(type==='all')card.style.display='';else if(type==='pubcom')card.style.display=card.classList.contains('pubcom')?'':'none';else if(type==='meti')card.style.display=(src==='meti_en_press'||src==='meti_geniac')?'':'none';else if(type==='jimin')card.style.display=src==='jimin_news'?'':'none';else if(type==='digital')card.style.display=(src==='digital_agency'||src==='digital_ai')?'':'none';else card.style.display=src===type?'':'none';})}
+function filter(type){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('#articles .card').forEach(card=>{const src=card.dataset.source;if(type==='all')card.style.display='';else if(type==='pubcom')card.style.display=card.classList.contains('pubcom')?'':'none';else if(type==='meti')card.style.display=(src==='meti_en_press'||src==='meti_geniac')?'':'none';else if(type==='jimin')card.style.display=src==='jimin_news'?'':'none';else if(type==='digital_agency')card.style.display=src==='digital_agency'?'':'none';else card.style.display=src===type?'':'none';})}
 </script>
 </body></html>"""
 
@@ -417,7 +470,7 @@ def generate_html(data):
 
 
 async def main():
-    logger.info("=== AI政策モニター v6 ===")
+    logger.info("=== AI政策モニター v7 ===")
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件取得")
     existing = load_existing_data()

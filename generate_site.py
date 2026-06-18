@@ -1,5 +1,5 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成 (v5)
+GitHub Actions用: スクレイピング → 静的HTML生成 (v6)
 """
 
 import asyncio
@@ -34,11 +34,13 @@ KEYWORDS = [
     "プリンシプル", "GENIAC", "フロンティアAI", "frontier AI",
     "基盤モデル", "foundation model", "AI戦略", "AI安全", "AI safety",
     "著作権", "学習データ", "AI法", "AI Act", "デジタル社会推進", "AI・web3",
+    "ガイドライン", "guideline",
 ]
 
 SOURCES = {
     "cabinet_office": {"name": "内閣府", "url": "https://www8.cao.go.jp/cstp/ai/index.html", "encoding": "utf-8"},
     "digital_agency": {"name": "デジタル庁", "url": "https://www.digital.go.jp/news", "encoding": "utf-8"},
+    "digital_ai": {"name": "デジタル庁(AI)", "url": "https://www.digital.go.jp/policies/ai", "encoding": "utf-8"},
     "meti_en_press": {"name": "経産省(EN)", "url": "https://www.meti.go.jp/english/press/category_03.html", "encoding": "utf-8"},
     "meti_geniac": {"name": "経産省 GENIAC", "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/", "encoding": "utf-8"},
     "soumu_news": {"name": "総務省", "url": "https://www.soumu.go.jp/menu_news/s-news/", "encoding": "shift_jis"},
@@ -160,8 +162,8 @@ async def scrape_source(source_id):
         if source_id == "jimin_news" and not matched:
             if any(kw in title for kw in ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信"]):
                 matched = ["AI戦略"]
-        if source_id == "digital_agency" and not matched:
-            if any(kw in title for kw in ["AI", "人工知能", "デジタル", "データ", "クラウド"]):
+        if source_id in ("digital_agency", "digital_ai") and not matched:
+            if any(kw in title for kw in ["AI", "人工知能", "生成", "データ", "クラウド", "ガイドライン"]):
                 matched = ["AI戦略"]
         if not matched:
             continue
@@ -351,7 +353,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 <button class="tab active" onclick="filter('all')">すべて</button>
 <button class="tab" onclick="filter('pubcom')">パブコメ</button>
 <button class="tab" onclick="filter('cabinet_office')">内閣府</button>
-<button class="tab" onclick="filter('digital_agency')">デジタル庁</button>
+<button class="tab" onclick="filter('digital')">デジタル庁</button>
 <button class="tab" onclick="filter('meti')">経産省</button>
 <button class="tab" onclick="filter('soumu_news')">総務省</button>
 <button class="tab" onclick="filter('mext_news')">文科省</button>
@@ -369,7 +371,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 {% endif %}
 <div class="section"><h2>📰 最新情報</h2><div id="articles">
 {% for item in articles %}
-<div class="card {{ 'pubcom' if item.is_public_comment else '' }} {{ 'digital' if item.source_id == 'digital_agency' else '' }}" data-source="{{ item.source_id }}">
+<div class="card {{ 'pubcom' if item.is_public_comment else '' }} {{ 'digital' if item.source_id in ('digital_agency','digital_ai') else '' }}" data-source="{{ item.source_id }}">
 <span class="source">{{ item.source_name }}</span>
 <div class="title"><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
 <div class="meta">{% if item.published_date %}<span class="pub-date">📅 {{ item.published_date }}</span>{% else %}<span>{{ item.scraped_at }}</span>{% endif %}{% for kw in item.matched_keywords %}<span class="kw-tag">{{ kw }}</span>{% endfor %}</div></div>
@@ -378,7 +380,7 @@ header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
 </div></div></div>
 <a class="refresh-link" href="{{ actions_url }}" target="_blank">🔄 手動更新</a>
 <script>
-function filter(type){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('#articles .card').forEach(card=>{const src=card.dataset.source;if(type==='all')card.style.display='';else if(type==='pubcom')card.style.display=card.classList.contains('pubcom')?'':'none';else if(type==='meti')card.style.display=(src==='meti_en_press'||src==='meti_geniac')?'':'none';else if(type==='jimin')card.style.display=src==='jimin_news'?'':'none';else card.style.display=src===type?'':'none';})}
+function filter(type){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('#articles .card').forEach(card=>{const src=card.dataset.source;if(type==='all')card.style.display='';else if(type==='pubcom')card.style.display=card.classList.contains('pubcom')?'':'none';else if(type==='meti')card.style.display=(src==='meti_en_press'||src==='meti_geniac')?'':'none';else if(type==='jimin')card.style.display=src==='jimin_news'?'':'none';else if(type==='digital')card.style.display=(src==='digital_agency'||src==='digital_ai')?'':'none';else card.style.display=src===type?'':'none';})}
 </script>
 </body></html>"""
 
@@ -407,14 +409,13 @@ def generate_html(data):
         update_time=now.strftime("%Y/%m/%d %H:%M"), deadlines=deadlines,
         articles=recent_data[:100], actions_url=actions_url,
     )
-    output_path = os.path.join(OUTPUT_DIR, "index.html")
-    with open(output_path, "w", encoding="utf-8") as f:
+    with open(os.path.join(OUTPUT_DIR, "index.html"), "w", encoding="utf-8") as f:
         f.write(html)
-    logger.info(f"HTML生成完了: {output_path} (直近2週間: {len(recent_data)}件)")
+    logger.info(f"HTML生成完了 (直近2週間: {len(recent_data)}件)")
 
 
 async def main():
-    logger.info("=== AI政策モニター v5 ===")
+    logger.info("=== AI政策モニター v6 ===")
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件取得")
     existing = load_existing_data()

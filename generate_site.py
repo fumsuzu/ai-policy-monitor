@@ -40,7 +40,9 @@ KEYWORDS = [
 SOURCES = {
     "cabinet_office": {"name": "内閣府", "url": "https://www8.cao.go.jp/cstp/ai/index.html", "encoding": "utf-8"},
     "digital_agency": {"name": "デジタル庁", "url": "https://www.digital.go.jp/news", "encoding": "utf-8"},
-    "digital_ai": {"name": "デジタル庁(AI)", "url": "https://www.digital.go.jp/policies/ai", "encoding": "utf-8"},
+    "digital_ai": {"name": "デジタル庁(AI)", "url": "https://www.digital.go.jp/policies/genai", "encoding": "utf-8"},
+"digital_ai_board": {"name": "デジタル庁(AI会議)", "url": "https://www.digital.go.jp/councils/ai-advisory-board", "encoding": "utf-8"},
+
     "meti_en_press": {"name": "経産省(EN)", "url": "https://www.meti.go.jp/english/press/category_03.html", "encoding": "utf-8"},
     "meti_geniac": {"name": "経産省 GENIAC", "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/", "encoding": "utf-8"},
     "soumu_news": {"name": "総務省", "url": "https://www.soumu.go.jp/menu_news/s-news/", "encoding": "shift_jis"},

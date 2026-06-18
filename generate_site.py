@@ -1,8 +1,9 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成 (v4)
+GitHub Actions用: スクレイピング → 静的HTML生成 (v5)
 - 日本時間(JST)表示
 - デジタル庁追加
 - 2週間以内の情報のみ表示
+- 公開日順に表示（取得できない場合はスクレイピング日で代替）
 - 手動更新ボタン付き
 """
 
@@ -33,7 +34,6 @@ def now_jst() -> datetime:
 
 # ===== 設定 =====
 
-# 新着として表示する期間（日数）
 MAX_AGE_DAYS = 14
 
 KEYWORDS = [
@@ -127,9 +127,68 @@ class ScrapedItem:
     source_name: str
     matched_keywords: list[str] = field(default_factory=list)
     scraped_at: str = ""
+    published_date: str = ""
     is_public_comment: bool = False
     end_date: Optional[str] = None
     ministry: Optional[str] = None
+
+
+# ===== 日付抽出ユーティリティ =====
+
+MONTH_EN = {
+    "january": 1, "february": 2, "march": 3, "april": 4,
+    "may": 5, "june": 6, "july": 7, "august": 8,
+    "september": 9, "october": 10, "november": 11, "december": 12,
+    "jan": 1, "feb": 2, "mar": 3, "apr": 4,
+    "jun": 6, "jul": 7, "aug": 8, "sep": 9, "oct": 10, "nov": 11, "dec": 12,
+}
+
+
+def extract_date_ja(text: str) -> Optional[str]:
+    m = re.search(r"令和(\d+)年(\d{1,2})月(\d{1,2})日", text)
+    if m:
+        year = int(m.group(1)) + 2018
+        return f"{year}/{int(m.group(2)):02d}/{int(m.group(3)):02d}"
+    m = re.search(r"(\d{4})[年/\-](\d{1,2})[月/\-](\d{1,2})", text)
+    if m:
+        return f"{m.group(1)}/{int(m.group(2)):02d}/{int(m.group(3)):02d}"
+    return None
+
+
+def extract_date_en(text: str) -> Optional[str]:
+    m = re.search(r"([A-Za-z]+)\s+(\d{1,2}),?\s+(\d{4})", text)
+    if m:
+        month_name = m.group(1).lower()
+        month = MONTH_EN.get(month_name)
+        if month:
+            return f"{m.group(3)}/{month:02d}/{int(m.group(2)):02d}"
+    m = re.search(r"(\d{1,2})\s+([A-Za-z]+)\s+(\d{4})", text)
+    if m:
+        month_name = m.group(2).lower()
+        month = MONTH_EN.get(month_name)
+        if month:
+            return f"{m.group(3)}/{month:02d}/{int(m.group(1)):02d}"
+    return None
+
+
+def find_nearby_date(element) -> Optional[str]:
+    for parent in [element.parent, element.parent.parent if element.parent else None]:
+        if not parent:
+            continue
+        text = parent.get_text()
+        date = extract_date_ja(text)
+        if date:
+            return date
+        date = extract_date_en(text)
+        if date:
+            return date
+    prev = element.find_previous_sibling()
+    if prev:
+        text = prev.get_text()
+        date = extract_date_ja(text)
+        if date:
+            return date
+    return None
 
 
 # ===== スクレイピング =====
@@ -164,7 +223,6 @@ async def fetch_page(url: str, encoding: str = "utf-8") -> Optional[BeautifulSou
 
 
 async def scrape_source(source_id: str) -> list[ScrapedItem]:
-    """汎用スクレイパー"""
     config = SOURCES[source_id]
     items = []
     soup = await fetch_page(config["url"], config.get("encoding", "utf-8"))
@@ -202,6 +260,8 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
         if not matched:
             continue
 
+        pub_date = find_nearby_date(link) or ""
+
         items.append(ScrapedItem(
             title=title,
             url=url,
@@ -209,6 +269,7 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
             source_name=config["name"],
             matched_keywords=matched,
             scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
+            published_date=pub_date,
         ))
 
     logger.info(f"[{source_id}] {len(items)}件取得")
@@ -216,7 +277,6 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
 
 
 async def scrape_egov_pubcom() -> list[ScrapedItem]:
-    """e-Govパブコメ用スクレイパー"""
     items = []
     urls = [
         "https://public-comment.e-gov.go.jp/servlet/Public?CLASSNAME=PCM1031_CLS&fromType=list",
@@ -251,12 +311,14 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
         parent = link.find_parent("tr") or link.find_parent("div")
         end_date = None
         ministry = None
+        pub_date = ""
         if parent:
             text = parent.get_text()
             date_match = re.search(r"(\d{4})[年/](\d{1,2})[月/](\d{1,2})", text)
             if date_match:
                 try:
                     end_date = f"{date_match.group(1)}/{date_match.group(2).zfill(2)}/{date_match.group(3).zfill(2)}"
+                    pub_date = end_date
                 except (ValueError, IndexError):
                     pass
             for m in ["内閣府", "経済産業省", "総務省", "文部科学省", "デジタル庁"]:
@@ -271,6 +333,7 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
             source_name="e-Gov パブコメ",
             matched_keywords=matched,
             scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
+            published_date=pub_date,
             is_public_comment=True,
             end_date=end_date,
             ministry=ministry,
@@ -281,7 +344,6 @@ async def scrape_egov_pubcom() -> list[ScrapedItem]:
 
 
 async def scrape_soumu_ai() -> list[ScrapedItem]:
-    """総務省AI関連を追加で検索"""
     items = []
     ai_urls = [
         "https://www.soumu.go.jp/menu_seisaku/ictseisaku/",
@@ -304,6 +366,7 @@ async def scrape_soumu_ai() -> list[ScrapedItem]:
             matched = match_keywords(title)
             if not matched:
                 continue
+            pub_date = find_nearby_date(link) or ""
             items.append(ScrapedItem(
                 title=title,
                 url=full_url,
@@ -311,22 +374,20 @@ async def scrape_soumu_ai() -> list[ScrapedItem]:
                 source_name="総務省",
                 matched_keywords=matched,
                 scraped_at=now_jst().strftime("%Y/%m/%d %H:%M"),
+                published_date=pub_date,
             ))
     logger.info(f"[soumu_ai追加] {len(items)}件取得")
     return items
 
 
 async def run_all_scrapers() -> list[ScrapedItem]:
-    """全スクレイパー実行"""
     all_items = []
-
     tasks = []
     for source_id in SOURCES:
         if source_id == "egov_pubcom":
             tasks.append(scrape_egov_pubcom())
         else:
             tasks.append(scrape_source(source_id))
-
     tasks.append(scrape_soumu_ai())
 
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -335,7 +396,6 @@ async def run_all_scrapers() -> list[ScrapedItem]:
             all_items.extend(result)
         elif isinstance(result, Exception):
             logger.error(f"スクレイパーエラー: {result}")
-
     return all_items
 
 
@@ -360,6 +420,7 @@ def merge_data(existing: list[dict], new_items: list[ScrapedItem]) -> list[dict]
                 "source_name": item.source_name,
                 "matched_keywords": item.matched_keywords,
                 "scraped_at": item.scraped_at,
+                "published_date": item.published_date,
                 "is_public_comment": item.is_public_comment,
                 "end_date": item.end_date,
                 "ministry": item.ministry,
@@ -367,15 +428,25 @@ def merge_data(existing: list[dict], new_items: list[ScrapedItem]) -> list[dict]
             })
             existing_urls.add(item.url)
 
-    existing.sort(key=lambda x: x.get("scraped_at", ""), reverse=True)
+    def sort_key(x):
+        pub = x.get("published_date", "")
+        if pub:
+            return pub
+        scraped = x.get("scraped_at", "")
+        return scraped[:10] if scraped else ""
+
+    existing.sort(key=sort_key, reverse=True)
     return existing[:500]
 
 
 def filter_recent(data: list[dict], days: int = MAX_AGE_DAYS) -> list[dict]:
-    """指定日数以内のデータのみ返す"""
     cutoff = now_jst() - timedelta(days=days)
-    cutoff_str = cutoff.strftime("%Y/%m/%d %H:%M")
-    recent = [item for item in data if item.get("scraped_at", "") >= cutoff_str]
+    cutoff_str = cutoff.strftime("%Y/%m/%d")
+    recent = []
+    for item in data:
+        date_str = item.get("published_date", "") or item.get("scraped_at", "")[:10]
+        if date_str >= cutoff_str:
+            recent.append(item)
     return recent
 
 
@@ -455,7 +526,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card .title { font-weight: 600; margin-bottom: 4px; }
         .card .title a { color: #1a237e; text-decoration: none; }
         .card .title a:hover { text-decoration: underline; }
-        .card .meta { font-size: 0.8em; color: #888; display: flex; gap: 10px; flex-wrap: wrap; }
+        .card .meta { font-size: 0.8em; color: #888; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+        .card .pub-date { color: #1a237e; font-weight: 500; }
         .kw-tag {
             display: inline-block; background: #e8eaf6; color: #1a237e;
             padding: 1px 7px; border-radius: 10px; font-size: 0.7em; margin-right: 3px;
@@ -508,7 +580,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 
     <div class="update-time">最終更新: {{ update_time }} (JST)</div>
-    <div class="period-note">※ 直近2週間以内の情報を表示しています</div>
+    <div class="period-note">※ 直近2週間以内の情報を公開日順に表示しています</div>
 
     {% if deadlines %}
     <div class="section">
@@ -534,7 +606,11 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             <span class="source">{{ item.source_name }}</span>
             <div class="title"><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
             <div class="meta">
+                {% if item.published_date %}
+                <span class="pub-date">📅 {{ item.published_date }}</span>
+                {% else %}
                 <span>{{ item.scraped_at }}</span>
+                {% endif %}
                 {% for kw in item.matched_keywords %}<span class="kw-tag">{{ kw }}</span>{% endfor %}
             </div>
         </div>
@@ -570,7 +646,6 @@ def generate_html(data: list[dict]):
     now = now_jst()
     today_str = now.strftime("%Y/%m/%d %H:%M")
 
-    # 2週間以内のデータのみ表示
     recent_data = filter_recent(data)
 
     deadlines = []
@@ -610,7 +685,7 @@ def generate_html(data: list[dict]):
 # ===== メイン =====
 
 async def main():
-    logger.info("=== AI政策モニター v4: スクレイピング開始 ===")
+    logger.info("=== AI政策モニター v5: スクレイピング開始 ===")
 
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件 新規取得")
@@ -622,7 +697,3 @@ async def main():
 
     generate_html(merged)
     logger.info("=== 完了 ===")
-
-
-if __name__ == "__main__":
-    asyncio.run(main())

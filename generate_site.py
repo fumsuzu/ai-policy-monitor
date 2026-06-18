@@ -1,9 +1,9 @@
 """
-GitHub Actions用: スクレイピング → 静的HTML生成 (v3)
-- 日本時間(JST)表示対応
-- 経産省: 英語版プレスリリース + GENIACページ
-- 総務省: Shift-JISエンコーディング対応
-- 自民党: ニュースページ追加
+GitHub Actions用: スクレイピング → 静的HTML生成 (v4)
+- 日本時間(JST)表示
+- デジタル庁追加
+- 2週間以内の情報のみ表示
+- 手動更新ボタン付き
 """
 
 import asyncio
@@ -32,6 +32,9 @@ def now_jst() -> datetime:
 
 
 # ===== 設定 =====
+
+# 新着として表示する期間（日数）
+MAX_AGE_DAYS = 14
 
 KEYWORDS = [
     "AI推進法",
@@ -62,6 +65,11 @@ SOURCES = {
     "cabinet_office": {
         "name": "内閣府",
         "url": "https://www8.cao.go.jp/cstp/ai/index.html",
+        "encoding": "utf-8",
+    },
+    "digital_agency": {
+        "name": "デジタル庁",
+        "url": "https://www.digital.go.jp/news",
         "encoding": "utf-8",
     },
     "meti_en_press": {
@@ -184,6 +192,11 @@ async def scrape_source(source_id: str) -> list[ScrapedItem]:
         if source_id == "jimin_news" and not matched:
             party_keywords = ["デジタル", "AI", "人工知能", "知的財産", "著作権", "科学技術", "情報通信", "IT"]
             if any(kw in title for kw in party_keywords):
+                matched = ["AI戦略"]
+
+        if source_id == "digital_agency" and not matched:
+            da_keywords = ["AI", "人工知能", "デジタル", "データ", "クラウド"]
+            if any(kw in title for kw in da_keywords):
                 matched = ["AI戦略"]
 
         if not matched:
@@ -358,6 +371,14 @@ def merge_data(existing: list[dict], new_items: list[ScrapedItem]) -> list[dict]
     return existing[:500]
 
 
+def filter_recent(data: list[dict], days: int = MAX_AGE_DAYS) -> list[dict]:
+    """指定日数以内のデータのみ返す"""
+    cutoff = now_jst() - timedelta(days=days)
+    cutoff_str = cutoff.strftime("%Y/%m/%d %H:%M")
+    recent = [item for item in data if item.get("scraped_at", "") >= cutoff_str]
+    return recent
+
+
 def save_data(data: list[dict]):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     with open(DATA_FILE, "w", encoding="utf-8") as f:
@@ -426,6 +447,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         .card:hover { transform: translateX(4px); }
         .card.pubcom { border-left-color: #2e7d32; }
         .card.deadline { border-left-color: #d32f2f; }
+        .card.digital { border-left-color: #6200ea; }
         .card .source {
             font-size: 0.75em; color: #666; background: #f0f0f0;
             padding: 2px 8px; border-radius: 4px; display: inline-block; margin-bottom: 4px;
@@ -458,6 +480,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
             box-shadow: 0 4px 15px rgba(26, 35, 126, 0.4);
         }
         .refresh-link:hover { transform: scale(1.05); }
+        .period-note { font-size: 0.8em; color: #999; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -468,7 +491,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </header>
 
     <div class="stats">
-        <div class="stat-card"><div class="number">{{ total }}</div><div class="label">収集済み</div></div>
+        <div class="stat-card"><div class="number">{{ total }}</div><div class="label">直近2週間</div></div>
         <div class="stat-card"><div class="number">{{ pubcom_count }}</div><div class="label">パブコメ</div></div>
         <div class="stat-card"><div class="number">{{ deadline_count }}</div><div class="label">締切間近</div></div>
     </div>
@@ -477,6 +500,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <button class="tab active" onclick="filter('all')">すべて</button>
         <button class="tab" onclick="filter('pubcom')">パブコメ</button>
         <button class="tab" onclick="filter('cabinet_office')">内閣府</button>
+        <button class="tab" onclick="filter('digital_agency')">デジタル庁</button>
         <button class="tab" onclick="filter('meti')">経産省</button>
         <button class="tab" onclick="filter('soumu_news')">総務省</button>
         <button class="tab" onclick="filter('mext_news')">文科省</button>
@@ -484,6 +508,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
     </div>
 
     <div class="update-time">最終更新: {{ update_time }} (JST)</div>
+    <div class="period-note">※ 直近2週間以内の情報を表示しています</div>
 
     {% if deadlines %}
     <div class="section">
@@ -505,7 +530,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         <h2>📰 最新情報</h2>
         <div id="articles">
         {% for item in articles %}
-        <div class="card {{ 'pubcom' if item.is_public_comment else '' }}" data-source="{{ item.source_id }}">
+        <div class="card {{ 'pubcom' if item.is_public_comment else '' }} {{ 'digital' if item.source_id == 'digital_agency' else '' }}" data-source="{{ item.source_id }}">
             <span class="source">{{ item.source_name }}</span>
             <div class="title"><a href="{{ item.url }}" target="_blank">{{ item.title }}</a></div>
             <div class="meta">
@@ -515,7 +540,7 @@ HTML_TEMPLATE = """<!DOCTYPE html>
         </div>
         {% endfor %}
         {% if not articles %}
-        <div class="empty">まだデータがありません。次回の自動更新をお待ちください。</div>
+        <div class="empty">直近2週間以内のAI政策関連情報はありません。</div>
         {% endif %}
         </div>
     </div>
@@ -545,9 +570,12 @@ def generate_html(data: list[dict]):
     now = now_jst()
     today_str = now.strftime("%Y/%m/%d %H:%M")
 
+    # 2週間以内のデータのみ表示
+    recent_data = filter_recent(data)
+
     deadlines = []
     pubcom_count = 0
-    for item in data:
+    for item in recent_data:
         if item.get("is_public_comment"):
             pubcom_count += 1
             if item.get("end_date"):
@@ -559,31 +587,30 @@ def generate_html(data: list[dict]):
                 except (ValueError, IndexError):
                     pass
 
-    # GitHub Actionsの手動実行ページURL
     repo_name = os.environ.get("GITHUB_REPOSITORY", "fumsuzu/ai-policy-monitor")
     actions_url = f"https://github.com/{repo_name}/actions/workflows/scrape.yml"
 
     template = Template(HTML_TEMPLATE)
     html = template.render(
-        total=len(data),
+        total=len(recent_data),
         pubcom_count=pubcom_count,
         deadline_count=len(deadlines),
         update_time=today_str,
         deadlines=deadlines,
-        articles=data[:100],
+        articles=recent_data[:100],
         actions_url=actions_url,
     )
 
     output_path = os.path.join(OUTPUT_DIR, "index.html")
     with open(output_path, "w", encoding="utf-8") as f:
         f.write(html)
-    logger.info(f"HTML生成完了: {output_path}")
+    logger.info(f"HTML生成完了: {output_path} (直近2週間: {len(recent_data)}件)")
 
 
 # ===== メイン =====
 
 async def main():
-    logger.info("=== AI政策モニター v3: スクレイピング開始 ===")
+    logger.info("=== AI政策モニター v4: スクレイピング開始 ===")
 
     new_items = await run_all_scrapers()
     logger.info(f"合計 {len(new_items)}件 新規取得")

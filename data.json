@@ -1,0 +1,363 @@
+[
+  {
+    "title": "人工知能関連技術の研究開発及び活用の推進に関する法律（AI法）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "人工知能関連技術の研究開発及び活用の推進",
+      "AI法"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略会議（イノベーション政策強化推進のための有識者会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_senryaku/ai_senryaku.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略推進関係省庁会議",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_kankeishoutyou/ai_kankeishoutyou.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI学習データに関するコミュニケーション窓口",
+    "url": "https://www8.cao.go.jp/cstp/ai/aidata/communicationdesk.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "学習データ"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略チーム（関係省庁連携）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_team/ai_team.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "イノベーション政策強化推進のための有識者会議「AI戦略」（AI戦略実行会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/senryaku/kaigi.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI開発ガイドライン」（仮称）の策定に向けて整理した論点に関する意見募集に対して提出された意見",
+    "url": "https://www.soumu.go.jp/main_content/000490102.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "The Draft AI R&D GUIDELINES for International Discussions",
+    "url": "https://www.soumu.go.jp/main_content/000507517.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Overview of 2019 Report (incl. AI Utilization Guidelines)",
+    "url": "https://www.soumu.go.jp/main_content/000637844.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Comparison of AI guidelines",
+    "url": "https://www.soumu.go.jp/main_content/000637845.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI Utilization Guidelines",
+    "url": "https://www.soumu.go.jp/main_content/000658284.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン」掲載ページ",
+    "url": "https://www.soumu.go.jp/main_sosiki/kenkyu/ai_network/02ryutsu20_04000019.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に対するご意見及びその考え方",
+    "url": "https://www.soumu.go.jp/main_content/000943068.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "マイナンバーカードの普及と利活用に関するダッシュボードのデータ更新を行いました",
+    "url": "https://www.digital.go.jp/resources/govdashboard/mynumber_card_penetration_usage",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/26",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "公金受取口座の登録状況に関するダッシュボードのデータ更新を行いました",
+    "url": "https://www.digital.go.jp/resources/govdashboard/account_registration_status",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/26",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "一般競争入札：令和8年度デジタル庁における給与関連システムの導入（再度公告）を掲載しました",
+    "url": "https://www.digital.go.jp/procurement",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/26",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "ゲックラー米日経済協議会会長による松本デジタル大臣表敬",
+    "url": "https://www.digital.go.jp/news/ca8d3026-6dfe-4c8a-9a61-72692e0e7ae2",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/26",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "デジタル改革共創プラットフォームへの参加登録方法について、システムメンテナンス情報を掲載しました",
+    "url": "https://www.digital.go.jp/get-involved/co-creation-platform/register",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/25",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "高等学校入学者選抜事務手続のデジタル化に関するダッシュボードを更新しました",
+    "url": "https://www.digital.go.jp/resources/govdashboard/high-school-entrance-examinations-digitalization",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/23",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "OECD「デジタル政府レポート」の刊行記念イベントにおいて、松本デジタル大臣がビデオメッセージを発出しました",
+    "url": "https://www.digital.go.jp/news/038b936a-c9f5-468a-8914-eccdd5011125",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2026/06/23",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に関する意見募集の結果及びガイドラインの公表",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01ryutsu20_02000001_00010.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2024/04/19",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に関する意見募集（令和6年1月20日（土）〜令和6年2月19日）",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01ryutsu20_02000001_00009.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2024/01/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "EUのAI規則案や米国におけるAIに関する法・倫理についての欧米における意見（Views in EU/the U.S. on EU’s Draft AI Act and law and ethics in the U.S.）",
+    "url": "https://www.soumu.go.jp/main_content/000848627.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "AI Act"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2022/07/25",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI開発ガイドライン」（仮称）の策定に向けて整理した論点に関する意見募集（平成28年12月28日（水）〜平成29年1月31日（火））",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01iicp01_02000054.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/06/28 05:17",
+    "published_date": "2020/06/05",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  }
+]

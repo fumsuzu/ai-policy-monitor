@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI政策モニター</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Hiragino Sans','Noto Sans JP',sans-serif;background:#f5f7fa;color:#333;line-height:1.6}
+.container{max-width:1000px;margin:0 auto;padding:20px}
+header{background:linear-gradient(135deg,#1a237e,#283593);color:#fff;padding:30px;border-radius:12px;margin-bottom:25px}
+header h1{font-size:1.6em;margin-bottom:5px}header p{opacity:.85;font-size:.9em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:25px}
+.stat-card{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.06);text-align:center}
+.stat-card .number{font-size:1.8em;font-weight:700;color:#1a237e}.stat-card .label{color:#666;font-size:.85em}
+.tabs{display:flex;gap:5px;margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 16px;border:none;background:#fff;border-radius:8px;cursor:pointer;font-size:.85em;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tab:hover{background:#e8eaf6}.tab.active{background:#1a237e;color:#fff}
+.update-time{text-align:right;font-size:.8em;color:#999;margin-bottom:10px}
+.period-note{font-size:.8em;color:#999;margin-bottom:15px}
+.section{margin-bottom:25px}.section h2{font-size:1.2em;margin-bottom:12px;padding-bottom:6px;border-bottom:2px solid #e8eaf6}
+.card{background:#fff;padding:15px;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.05);border-left:4px solid #1a237e;margin-bottom:10px;transition:transform .15s}
+.card:hover{transform:translateX(4px)}.card.pubcom{border-left-color:#2e7d32}.card.deadline{border-left-color:#d32f2f}.card.digital{border-left-color:#6200ea}
+.card .source{font-size:.75em;color:#666;background:#f0f0f0;padding:2px 8px;border-radius:4px;display:inline-block;margin-bottom:4px}
+.card .title{font-weight:600;margin-bottom:4px}.card .title a{color:#1a237e;text-decoration:none}.card .title a:hover{text-decoration:underline}
+.card .meta{font-size:.8em;color:#888;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card .pub-date{color:#1a237e;font-weight:500}
+.kw-tag{display:inline-block;background:#e8eaf6;color:#1a237e;padding:1px 7px;border-radius:10px;font-size:.7em;margin-right:3px}
+.deadline-badge{background:#ffebee;color:#c62828;padding:2px 8px;border-radius:10px;font-size:.75em;font-weight:700}
+.empty{text-align:center;padding:30px;color:#999}
+.refresh-link{position:fixed;bottom:30px;right:30px;background:#1a237e;color:#fff;padding:12px 20px;border-radius:50px;font-size:.85em;text-decoration:none;box-shadow:0 4px 15px rgba(26,35,126,.4)}
+.refresh-link:hover{transform:scale(1.05)}
+</style>
+</head>
+<body>
+<div class="container">
+<header><h1>🏛️ AI政策モニター</h1><p>AI推進法 / 透明性・知的財産行動規範 / プリンシプルコード / GENIAC / フロンティアAI</p></header>
+<div class="stats">
+<div class="stat-card"><div class="number">23</div><div class="label">直近2週間</div></div>
+<div class="stat-card"><div class="number">0</div><div class="label">パブコメ</div></div>
+<div class="stat-card"><div class="number">0</div><div class="label">締切間近</div></div>
+</div>
+<div class="tabs">
+<button class="tab active" onclick="filter('all')">すべて</button>
+<button class="tab" onclick="filter('pubcom')">パブコメ</button>
+<button class="tab" onclick="filter('cabinet_office')">内閣府</button>
+<button class="tab" onclick="filter('digital_agency')">デジタル庁</button>
+<button class="tab" onclick="filter('meti')">経産省</button>
+<button class="tab" onclick="filter('soumu_news')">総務省</button>
+<button class="tab" onclick="filter('mext_news')">文科省</button>
+<button class="tab" onclick="filter('jimin')">自民党</button>
+</div>
+<div class="update-time">最終更新: 2026/07/02 04:15 (JST)</div>
+<div class="period-note">※ 直近2週間以内の情報を公開日順に表示</div>
+
+<div class="section"><h2>📰 最新情報</h2><div id="articles">
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html" target="_blank">人工知能関連技術の研究開発及び活用の推進に関する法律（AI法）</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">人工知能関連技術の研究開発及び活用の推進</span><span class="kw-tag">AI法</span></div></div>
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_senryaku/ai_senryaku.html" target="_blank">AI戦略会議（イノベーション政策強化推進のための有識者会議）</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_kankeishoutyou/ai_kankeishoutyou.html" target="_blank">AI戦略推進関係省庁会議</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/aidata/communicationdesk.html" target="_blank">AI学習データに関するコミュニケーション窓口</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">学習データ</span></div></div>
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/ai_team/ai_team.html" target="_blank">AI戦略チーム（関係省庁連携）</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  " data-source="cabinet_office">
+<span class="source">内閣府</span>
+<div class="title"><a href="https://www8.cao.go.jp/cstp/ai/senryaku/kaigi.html" target="_blank">イノベーション政策強化推進のための有識者会議「AI戦略」（AI戦略実行会議）</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000490102.pdf" target="_blank">「AI開発ガイドライン」（仮称）の策定に向けて整理した論点に関する意見募集に対して提出された意見</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">ガイドライン</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000507517.pdf" target="_blank">The Draft AI R&D GUIDELINES for International Discussions</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">guideline</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000637844.pdf" target="_blank">Overview of 2019 Report (incl. AI Utilization Guidelines)</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">guideline</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000637845.pdf" target="_blank">Comparison of AI guidelines</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">guideline</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000658284.pdf" target="_blank">AI Utilization Guidelines</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">guideline</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_sosiki/kenkyu/ai_network/02ryutsu20_04000019.html" target="_blank">「AI事業者ガイドライン」掲載ページ</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">ガイドライン</span></div></div>
+
+<div class="card  " data-source="soumu_news">
+<span class="source">総務省</span>
+<div class="title"><a href="https://www.soumu.go.jp/main_content/000943068.pdf" target="_blank">「AI事業者ガイドライン案」に対するご意見及びその考え方</a></div>
+<div class="meta"><span>2026/07/02 04:14</span><span class="kw-tag">ガイドライン</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/policies/government-certification" target="_blank">国家資格等のオンライン・デジタル化に関する動画を追加しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/07/01</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/about/member" target="_blank">令和8年7月1日付デジタル庁幹部一覧を掲載しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/07/01</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/procurement" target="_blank">一般競争入札：今後のデジタル人材育成の在り方に関する検討会開催支援業務の請負を掲載しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/07/01</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/policies/digital_promotion_staff/seminars" target="_blank">デジタル推進委員の取組における地域で開催される講座等の情報を更新しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/29</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/policies/digital_promotion_staff/cooperation" target="_blank">デジタル推進委員の取組についてご協力いただいている企業・団体等の一覧を更新しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/29</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/news/4f5a94ca-1b9c-4e1a-a662-46ac4edb2af7" target="_blank">ジグムント駐日ドイツ大使による松本デジタル大臣表敬</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/29</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/resources/govdashboard/mynumber_card_penetration_usage" target="_blank">マイナンバーカードの普及と利活用に関するダッシュボードのデータ更新を行いました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/26</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/resources/govdashboard/account_registration_status" target="_blank">公金受取口座の登録状況に関するダッシュボードのデータ更新を行いました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/26</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/news/ca8d3026-6dfe-4c8a-9a61-72692e0e7ae2" target="_blank">ゲックラー米日経済協議会会長による松本デジタル大臣表敬</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/26</span><span class="kw-tag">AI戦略</span></div></div>
+
+<div class="card  digital" data-source="digital_agency">
+<span class="source">デジタル庁</span>
+<div class="title"><a href="https://www.digital.go.jp/get-involved/co-creation-platform/register" target="_blank">デジタル改革共創プラットフォームへの参加登録方法について、システムメンテナンス情報を掲載しました</a></div>
+<div class="meta"><span class="pub-date">📅 2026/06/25</span><span class="kw-tag">AI戦略</span></div></div>
+
+
+</div></div></div>
+<a class="refresh-link" href="https://github.com/fumsuzu/ai-policy-monitor/actions/workflows/scrape.yml" target="_blank">🔄 手動更新</a>
+<script>
+function filter(type){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));event.target.classList.add('active');document.querySelectorAll('#articles .card').forEach(card=>{const src=card.dataset.source;if(type==='all')card.style.display='';else if(type==='pubcom')card.style.display=card.classList.contains('pubcom')?'':'none';else if(type==='meti')card.style.display=(src==='meti_en_press'||src==='meti_geniac')?'':'none';else if(type==='jimin')card.style.display=src==='jimin_news'?'':'none';else if(type==='digital_agency')card.style.display=src==='digital_agency'?'':'none';else card.style.display=src===type?'':'none';})}
+</script>
+</body></html>

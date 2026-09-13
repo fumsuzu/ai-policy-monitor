@@ -1,0 +1,681 @@
+[
+  {
+    "title": "人工知能関連技術の研究開発及び活用の推進に関する法律（AI法）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_act/ai_act.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "人工知能関連技術の研究開発及び活用の推進",
+      "AI法"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略会議（イノベーション政策強化推進のための有識者会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_senryaku/ai_senryaku.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略推進関係省庁会議",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_kankeishoutyou/ai_kankeishoutyou.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI学習データに関するコミュニケーション窓口",
+    "url": "https://www8.cao.go.jp/cstp/ai/aidata/communicationdesk.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "学習データ"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI戦略チーム（関係省庁連携）",
+    "url": "https://www8.cao.go.jp/cstp/ai/ai_team/ai_team.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "イノベーション政策強化推進のための有識者会議「AI戦略」（AI戦略実行会議）",
+    "url": "https://www8.cao.go.jp/cstp/ai/senryaku/kaigi.html",
+    "source_id": "cabinet_office",
+    "source_name": "内閣府",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Policy Index",
+    "url": "https://www.meti.go.jp/english/policy/index.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "ABOUTGENIAC",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/#about",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "PLAYER SELECTION",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/#selected_company_01",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "OTHERCOMMUNITIES",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/#related_community",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Registration for Newsletter",
+    "url": "https://mm-enquete-cnt.meti.go.jp/dbc/pub/syomu-johosangyo/myt5bnps/create/input",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI開発ガイドライン」（仮称）の策定に向けて整理した論点に関する意見募集に対して提出された意見",
+    "url": "https://www.soumu.go.jp/main_content/000490102.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "The Draft AI R&D GUIDELINES for International Discussions",
+    "url": "https://www.soumu.go.jp/main_content/000507517.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Overview of 2019 Report (incl. AI Utilization Guidelines)",
+    "url": "https://www.soumu.go.jp/main_content/000637844.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Comparison of AI guidelines",
+    "url": "https://www.soumu.go.jp/main_content/000637845.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "AI Utilization Guidelines",
+    "url": "https://www.soumu.go.jp/main_content/000658284.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン」掲載ページ",
+    "url": "https://www.soumu.go.jp/main_sosiki/kenkyu/ai_network/02ryutsu20_04000019.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に対するご意見及びその考え方",
+    "url": "https://www.soumu.go.jp/main_content/000943068.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "多様なステークホルダーで行政デジタル化をともに考える「Govtech Meetup」（第6回）を開催します",
+    "url": "https://www.digital.go.jp/news/nDu6utZi",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/12",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "デジタル推進委員向けのデジタル情報をまとめて案内するページ「教える人のためのデジタル情報ひろば」を更新しました",
+    "url": "https://www.digital.go.jp/policies/digital_promotion_staff/curation",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/11",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "令和7年度「放送コンテンツの製作取引適正化に関するガイドライン」の　遵守状況の調査に伴う措置",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01ryutsu04_02000268.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/09",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "今後のデジタル人材育成政策に関する検討会（第1回）の議事次第および資料を掲載しました",
+    "url": "https://www.digital.go.jp/councils/digital-talent-development-policy/ff566760-278e-47da-8454-b25c40912fcb",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/09",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "令和7年度におけるデジタル庁の障害者就労施設等からの物品等の調達の推進を図るための方針及び令和6年度デジタル庁における障害者就労施設等からの物品等の調達実績を掲載しました",
+    "url": "https://www.digital.go.jp/procurement/challenged_person_employment_facilities_goods",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/08",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "松本デジタル大臣はロバートソン次期駐日英国大使による表敬訪問を受けました",
+    "url": "https://www.digital.go.jp/news/d02fb0ce-1321-4a58-b225-b3454896ab9e",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/08",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「今後のデジタル人材育成政策に関する検討会」開催について掲載しました",
+    "url": "https://www.digital.go.jp/councils/digital-talent-development-policy",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/08",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "川崎デジタル大臣政務官がデンマーク王国を訪問しました",
+    "url": "https://www.digital.go.jp/news/94b4ea71-a198-4d78-b0a4-6322ed7bfeee",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/07",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "ジョージアとデジタル分野における協力覚書を取り交わしました",
+    "url": "https://www.digital.go.jp/news/3da015e6-8d5c-494c-996c-d7a911f51fdb",
+    "source_id": "digital_agency",
+    "source_name": "デジタル庁",
+    "matched_keywords": [
+      "AI戦略"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/09/07",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Selection of Nine R&D Themes related to Establishing Data Ecosystems under the GENIAC Project Aimed at Strengthening Japan’s Generative AI Development Capabilities and Its Social Implementation",
+    "url": "https://www.meti.go.jp/english/press/2026/07/20260702001.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "generative AI",
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Multimodal Foundation Model Development Project for AI Robots and Physical AI Launched",
+    "url": "https://www.meti.go.jp/english/press/2026/0630_004.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "foundation model"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Selection of 16 New Projects to support the development of AI Models under the GENIAC Computing Resource Provision Support Project (Cycle 4)",
+    "url": "https://www.meti.go.jp/english/press/2026/0604_001.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "GENIAC-PRIZE 2026 to be Launched as an AI Contest Offering a Total Reward and Computing Resources of Approximately 1 Billion Yen",
+    "url": "https://www.meti.go.jp/english/press/2026/0529_002.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Selection of Nine R&D Themes related to Making Manufacturing and Other Data AI-Ready and Two R&D Themes related to Robotics Foundation Models Under the “GENIAC” Project to Strengthen Generative AI Development Capabilities",
+    "url": "https://www.meti.go.jp/english/press/2026/0514_001.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "generative AI",
+      "GENIAC",
+      "foundation model"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Interpretative Guidelines on Electronic Commerce and Information Property Trading Revised",
+    "url": "https://www.meti.go.jp/english/press/2025/0212_002.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Compilation of Report on Approaches to Human Resources and Skills Required for DX Promotion in the Age of Generative AI 2024: ー How to Face Generative AI for Transformation ー",
+    "url": "https://www.meti.go.jp/english/press/2024/0628_003.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "generative AI"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Compilation of the Smart Manufacturing Development Guideline (SMD Guideline)",
+    "url": "https://www.meti.go.jp/english/press/2024/0628_002.html",
+    "source_id": "meti_en_press",
+    "source_name": "経産省(EN)",
+    "matched_keywords": [
+      "guideline"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/31",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "2026/08/20GENIAC MAGAZINE has been updated.",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/#magazine",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Event Report2026/08/20The Fourth Business Matching Event for GENIAC Developers and User Companies Was Held",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/geniac_magazine/external_02.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Use Case2026/08/20Driving Innovation with Multimodal LMMs: Joint Development of AI to Streamline Insurance Policy Operations—Co-Creation Case Vol. 02: Ricoh × Sompo Japan",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/geniac_magazine/usecase_02.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Use Case2026/08/20Use Case Vol. 1: Panasonic Holdings × Stockmark—Developing \"Panasonic-LLM-100b,\" One of Japan's Largest Enterprise-Specific Large Language Models, to Advance AI-Driven Operational Efficiency Through Collaboration",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/geniac_magazine/usecase_01.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "Click here for other articles",
+    "url": "https://www.meti.go.jp/english/policy/mono_info_service/geniac/geniac_magazine/index.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2026/08/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "2025/08/01Regarding the Revocation of the Support Decision for Alt Inc",
+    "url": "https://www.nedo.go.jp/news/other/ZZKH_100117.html",
+    "source_id": "meti_geniac",
+    "source_name": "経産省 GENIAC",
+    "matched_keywords": [
+      "GENIAC"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2025/08/01",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に関する意見募集の結果及びガイドラインの公表",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01ryutsu20_02000001_00010.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2024/04/19",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI事業者ガイドライン案」に関する意見募集（令和6年1月20日（土）〜令和6年2月19日）",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01ryutsu20_02000001_00009.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2024/01/20",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "EUのAI規則案や米国におけるAIに関する法・倫理についての欧米における意見（Views in EU/the U.S. on EU’s Draft AI Act and law and ethics in the U.S.）",
+    "url": "https://www.soumu.go.jp/main_content/000848627.pdf",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "AI Act"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2022/07/25",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  },
+  {
+    "title": "「AI開発ガイドライン」（仮称）の策定に向けて整理した論点に関する意見募集（平成28年12月28日（水）〜平成29年1月31日（火））",
+    "url": "https://www.soumu.go.jp/menu_news/s-news/01iicp01_02000054.html",
+    "source_id": "soumu_news",
+    "source_name": "総務省",
+    "matched_keywords": [
+      "ガイドライン"
+    ],
+    "scraped_at": "2026/09/13 09:47",
+    "published_date": "2020/06/05",
+    "is_public_comment": false,
+    "end_date": null,
+    "ministry": null,
+    "is_new": true
+  }
+]
